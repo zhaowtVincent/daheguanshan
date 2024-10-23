@@ -3,19 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDF 图片查看器</title>
+    <title>大河观山</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
-    <div id="image-container">
-        <!-- 图片将通过JavaScript动态加载 -->
-    </div>
-    <div id="controls">
-        <button id="prev">上一页</button>
-        <span id="page-num"></span>
-        <button id="next">下一页</button>
+    <div id="viewer-container">
+        <div id="image-container">
+            <!-- 图片将通过JavaScript动态加载 -->
+        </div>
+        <div id="nav-prev" class="nav-button"><i class="fas fa-chevron-left"></i></div>
+        <div id="nav-next" class="nav-button"><i class="fas fa-chevron-right"></i></div>
+        <div id="page-info">
+            <span id="page-num"></span>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>
 </html>
-

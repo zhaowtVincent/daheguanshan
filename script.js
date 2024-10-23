@@ -1,10 +1,12 @@
 const imageContainer = document.getElementById('image-container');
-const prevButton = document.getElementById('prev');
-const nextButton = document.getElementById('next');
+const navPrev = document.getElementById('nav-prev');
+const navNext = document.getElementById('nav-next');
 const pageNum = document.getElementById('page-num');
 
 let currentPage = 1;
 let totalPages = 0;
+let startX, startY, endX, endY;
+const minSwipeDistance = 50; // 最小滑动距离
 
 // 加载图片
 function loadImages() {
@@ -38,25 +40,52 @@ function prevPage() {
 }
 
 // 事件监听器
-nextButton.addEventListener('click', nextPage);
-prevButton.addEventListener('click', prevPage);
+navNext.addEventListener('click', nextPage);
+navPrev.addEventListener('click', prevPage);
 
-// 触摸滑动
-let touchStartX = 0;
-let touchEndX = 0;
+// 触摸事件
+imageContainer.addEventListener('touchstart', handleTouchStart, false);
+imageContainer.addEventListener('touchmove', handleTouchMove, false);
+imageContainer.addEventListener('touchend', handleTouchEnd, false);
 
-imageContainer.addEventListener('touchstart', e => {
-    touchStartX = e.changedTouches[0].screenX;
-});
+// 记录触摸开始位置
+function handleTouchStart(event) {
+    const firstTouch = event.touches[0];
+    startX = firstTouch.clientX;
+    startY = firstTouch.clientY;
+}
 
-imageContainer.addEventListener('touchend', e => {
-    touchEndX = e.changedTouches[0].screenX;
-    handleSwipe();
-});
+// 记录触摸结束位置
+function handleTouchMove(event) {
+    if (!startX || !startY) {
+        return;
+    }
+    endX = event.touches[0].clientX;
+    endY = event.touches[0].clientY;
+}
 
-function handleSwipe() {
-    if (touchEndX < touchStartX) nextPage();
-    if (touchEndX > touchStartX) prevPage();
+// 处理滑动
+function handleTouchEnd() {
+    if (!startX || !startY || !endX || !endY) {
+        return;
+    }
+
+    const diffX = startX - endX;
+    const diffY = startY - endY;
+
+    // 确保水平滑动距离大于垂直滑动距离，并且超过最小滑动距离
+    if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > minSwipeDistance) {
+        if (diffX > 0) {
+            // 向左滑动
+            nextPage();
+        } else {
+            // 向右滑动
+            prevPage();
+        }
+    }
+
+    // 重置触摸坐标
+    startX = startY = endX = endY = null;
 }
 
 // 键盘控制
